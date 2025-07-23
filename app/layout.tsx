@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/AppSidebar"
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { ModeToggle } from "@/components/ModeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +12,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 
 const notoSansTC = Noto_Sans_TC({
   variable: "--font-noto-sans-tc",
@@ -39,23 +35,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansTC.variable}antialiased`}
       >
         <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          <SidebarProvider>
-          <AppSidebar />
-            <div className="flex flex-col flex-1">
-            <header className="h-10 flex items-center justify-between">
-              <SidebarTrigger />
-              <ModeToggle />
-            </header>
-            <main className="flex-1 p-2">
-              {children}
-            </main>
-            </div>
-          </SidebarProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

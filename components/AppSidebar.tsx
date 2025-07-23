@@ -1,5 +1,5 @@
-import { Home, IceCreamCone, FileText } from "lucide-react"
-import { routes } from "@/constants/routes"
+import { Home, IceCreamCone, FileText } from "lucide-react";
+import { routes } from "@/constants/routes";
 
 import {
   Sidebar,
@@ -10,7 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
@@ -26,10 +26,10 @@ const items = [
   },
   {
     title: "銷售紀錄",
-    url: routes.ORDERS,
+    url: routes.SALES,
     icon: FileText,
   },
-]
+];
 
 export function AppSidebar() {
   return (
@@ -54,5 +54,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

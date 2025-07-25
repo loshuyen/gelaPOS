@@ -1,33 +1,23 @@
 import React from "react";
 import Image from "next/image";
-import { CirclePlus } from "lucide-react";
+import { ProductCardProps } from "@/types/product";
 
-interface ProductCardProps {
-  productName: string;
-  productPrice: number;
-  productImage: string;
-  onAdd: () => void;
-}
-
-const ProductCard = ({ productName, productPrice, productImage, onAdd }: ProductCardProps) => {
+const ProductCard = ({ product, children }: ProductCardProps) => {
   return (
-    <div className="w-[200px] p-4 rounded-lg border-1 border-gray-400">
+    <div className="w-[200px] h-[250px] p-4 rounded-lg border-1 border-gray-400">
       <div className="w-full h-[150px] aspect-video rounded-lg relative">
         <Image
-          src={productImage}
-          alt={productName}
+          src={product.imageSrc}
+          alt={product.name}
           fill={true}
-          objectFit="cover"
-          className="rounded-lg"
+          className="rounded-lg object-cover"
           unoptimized
         />
       </div>
-      <p className="my-2">{productName}</p>
+      <p className="my-2">{product.name}</p>
       <div className="flex items-center justify-between mt-2">
-        <p>${productPrice}</p>
-        <button className="size-6" onClick={onAdd}>
-          <CirclePlus className="w-full h-full"/>
-        </button>
+        <p>${product.price}</p>
+        {children}
       </div>
     </div>
   );

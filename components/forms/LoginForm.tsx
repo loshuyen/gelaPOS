@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login, signup } from "@/actions/auth";
+import { login } from "@/actions/auth";
 import { routes } from "@/constants/routes";
 
 export function LoginForm({
@@ -51,9 +51,6 @@ export function LoginForm({
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full" formAction={login}>
                   登入
-                </Button>
-                <Button type="submit" className="w-full" formAction={signup}>
-                  註冊
                 </Button>
               </div>
             </div>

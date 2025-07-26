@@ -27,3 +27,18 @@ export async function createClient() {
     }
   )
 }
+
+export const getCurrentUser = async () => {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
+  if (error || !user) {
+    return
+  }
+
+  return user
+}

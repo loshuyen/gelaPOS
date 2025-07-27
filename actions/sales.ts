@@ -4,11 +4,61 @@ import { getCurrentUser } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import { CartItem } from "@/types/product";
 
+export const getAllSales = async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) return [];
+
+  const sales = await prisma.sales.findMany({
+    where: {
+      company_id: userProfile.company_id,
+    },
+    include: {
+      profiles: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+  return sales;
+};
+
 export const createSale = async (payMethod: string, items: CartItem[]) => {
   const user = await getCurrentUser();
 
   if (!user) {
     throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) {
+    throw new Error("未授權的使用者");
   }
 
   const total_price = items.reduce(
@@ -26,8 +76,9 @@ export const createSale = async (payMethod: string, items: CartItem[]) => {
         data: {
           user_id: user.id,
           pay_method: payMethod,
-          total_price: BigInt(total_price),
-          total_quantity: BigInt(total_quantity),
+          total_price: total_price,
+          total_quantity: total_quantity,
+          company_id: userProfile.company_id,
         },
       });
 
@@ -39,6 +90,7 @@ export const createSale = async (payMethod: string, items: CartItem[]) => {
             quantity: item.quantity,
             price: item.product.price,
             flavors: item.flavors.map((flavor) => flavor.name),
+            company_id: userProfile.company_id,
           },
         })
       );
@@ -52,4 +104,75 @@ export const createSale = async (payMethod: string, items: CartItem[]) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const getSaleById = async (saleId: number) => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) {
+    throw new Error("未授權的使用者");
+  }
+
+  const saleProducts = await prisma.sale_product.findMany({
+    where: {
+      company_id: userProfile.company_id,
+      AND: { sale_id: saleId },
+    },
+    include: {
+      products: true,
+      sales: true,
+    },
+  });
+  return saleProducts;
+};
+
+export const deleteSaleById = async (saleId: number) => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) {
+    throw new Error("未授權的使用者");
+  }
+
+  const sale = await prisma.sales.findUnique({
+    where: {
+      id: saleId,
+      AND: { company_id: userProfile.company_id },
+    },
+  });
+
+  if (!sale) {
+    throw new Error("紀錄不存在 or 未授權的使用者");
+  }
+
+  await prisma.sales.delete({
+    where: {
+      id: sale.id,
+    },
+  });
 };

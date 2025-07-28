@@ -36,19 +36,24 @@ export function FlavorSelect({
 
         <Separator />
 
-        {flavors.map((flavor) => (
-          <Badge
-            key={flavor.id}
-            variant="secondary"
-            className="text-lg font-semibold rounded-full"
-            onClick={() => handleFlavorAdd(flavor)}
-          >
-            <span className="font-semibold mr-2">{flavor.name}</span>
-            <button className="size-6">
-              <CirclePlus className="w-full h-full" />
-            </button>
-          </Badge>
-        ))}
+        {flavors
+          .filter(
+            (flavor) =>
+              !selectedFlavors.some((selected) => selected.id === flavor.id)
+          )
+          .map((flavor) => (
+            <Badge
+              key={flavor.id}
+              variant="secondary"
+              className="text-lg font-semibold rounded-full"
+              onClick={() => handleFlavorAdd(flavor)}
+            >
+              <span className="font-semibold mr-2">{flavor.name}</span>
+              <button className="size-6">
+                <CirclePlus className="w-full h-full" />
+              </button>
+            </Badge>
+          ))}
       </div>
     </div>
   );

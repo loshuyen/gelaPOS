@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { deleteSaleById } from "@/actions/sales";
 import type { SaleDetail } from "./columns";
-import { routes } from "@/constants/routes";
+import DeleteBtn from "../DeleteBtn";
 
 interface SalesTableProps {
   columns: ColumnDef<SaleDetail>[];
@@ -35,7 +35,6 @@ export function SaleTable({ columns, data }: SalesTableProps) {
 
   const deleteSale = async () => {
     await deleteSaleById(data[0].saleId);
-    router.push(routes.SALES);
   };
 
   return (
@@ -44,9 +43,7 @@ export function SaleTable({ columns, data }: SalesTableProps) {
         <Button variant={"outline"} onClick={() => router.back()}>
           返回
         </Button>
-        <Button variant={"destructive"} onClick={deleteSale}>
-          刪除
-        </Button>
+        <DeleteBtn handleDelete={deleteSale} />
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>

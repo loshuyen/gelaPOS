@@ -8,6 +8,7 @@ import { FlavorDialog } from "@/components/forms/FlavorDialog";
 import { FlavorSelect } from "@/components/FlavorSelect";
 import CartItemCard from "@/components/cart/CartItemCard";
 import { createSale } from "@/actions/sales";
+import { toast } from "sonner";
 
 export default function OrderPage({
   products,
@@ -91,9 +92,14 @@ export default function OrderPage({
     if (cartItems.length === 0) return;
     startTransition(async () => {
       try {
-        const result = await createSale(payMethod, cartItems);
+        toast.promise(createSale(payMethod, cartItems), {
+          loading: "訂單新增中...",
+          success: () => {
+            return "新增訂單完成";
+          },
+          error: "新增失敗",
+        });
         setCartItems([]);
-        console.log("新增sale成功:", result);
       } catch (error) {
         console.log("新增sale失敗", error);
       }

@@ -1,15 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { routes } from "@/constants/routes";
 import Link from "next/link";
 import { deleteSaleById } from "@/actions/sales";
@@ -78,29 +71,14 @@ export const columns: ColumnDef<Sale>[] = [
     cell: ({ row }) => {
       const sale = row.original;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link href={`${routes.SALES}/${sale.id}`}>查看明細</Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <DeleteBtn
-                handleDelete={async () => {
-                  await deleteSaleById(sale.id);
-                }}
-              >
-                刪除紀錄
-              </DeleteBtn>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex align-center justify-around">
+          <Link href={`${routes.SALES}/${sale.id}`}>明細</Link>
+          <DeleteBtn
+            handleDelete={async () => {
+              await deleteSaleById(sale.id);
+            }}
+          />
+        </div>
       );
     },
   },

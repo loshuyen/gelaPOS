@@ -2,12 +2,16 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  imageSrc: string;
+  imageSrc: string | null;
+  is_active: boolean;
+  created_at: Date;
 }
 
 export interface Flavor {
-  id: string;
+  id: number;
   name: string;
+  created_at: Date;
+  is_active: boolean;
 }
 
 export interface CartItem {

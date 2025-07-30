@@ -7,7 +7,7 @@ const ProductCard = ({ product, children }: ProductCardProps) => {
     <div className="w-[200px] h-[250px] p-4 rounded-lg border-1 border-gray-400">
       <div className="w-full h-[150px] aspect-video rounded-lg relative">
         <Image
-          src={product.imageSrc}
+          src={product.imageSrc || "./images/default.webp"}
           alt={product.name}
           fill={true}
           className="rounded-lg object-cover"

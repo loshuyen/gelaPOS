@@ -319,56 +319,90 @@ model users {
   mfa_factors                 mfa_factors[]
   one_time_tokens             one_time_tokens[]
   sessions                    sessions[]
-  sales                       sales[]
+  profiles                    profiles?
 
   @@index([instance_id])
   @@index([is_anonymous])
   @@schema("auth")
 }
 
+model companies {
+  id           Int            @id @default(autoincrement())
+  name         String?
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  flavors      flavors[]
+  products     products[]
+  profiles     profiles[]
+  sale_product sale_product[]
+  sales        sales[]
+
+  @@schema("public")
+}
+
 model flavors {
-  id         BigInt   @id @default(autoincrement())
-  name       String   @db.VarChar
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  is_active  Boolean  @default(false)
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar
+  created_at DateTime   @default(now()) @db.Timestamptz(6)
+  is_active  Boolean    @default(false)
+  company_id Int?
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "flavors_company_id_fkey1")
 
   @@schema("public")
 }
 
 model products {
-  id           BigInt         @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   created_at   DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?      @db.Timestamp(6)
-  name         String         @db.VarChar
-  price        BigInt         @default(0)
+  name         String
+  price        Int
   imageSrc     String?
+  company_id   Int?
+  is_active    Boolean        @default(false)
+  companies    companies?     @relation(fields: [company_id], references: [id], onDelete: Cascade)
   sale_product sale_product[]
 
   @@schema("public")
 }
 
+model profiles {
+  id         String     @id(map: "users_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at DateTime   @default(now()) @db.Timestamptz(6)
+  name       String?
+  email      String?
+  company_id Int?
+  companies  companies? @relation(fields: [company_id], references: [id], map: "users_company_id_fkey")
+  users      users      @relation(fields: [id], references: [id], onDelete: Cascade, map: "users_id_fkey")
+  sales      sales[]
+
+  @@schema("public")
+}
+
 model sale_product {
-  id         BigInt   @id @default(autoincrement())
-  sale_id    BigInt
-  product_id BigInt
-  quantity   BigInt?
-  price      BigInt?
+  id         Int        @id @default(autoincrement())
+  sale_id    Int
+  product_id Int
+  quantity   Int?
+  price      Int?
   flavors    String[]
-  products   products @relation(fields: [product_id], references: [id], onUpdate: Restrict)
-  sales      sales    @relation(fields: [sale_id], references: [id], onUpdate: Restrict)
+  company_id Int?
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  products   products   @relation(fields: [product_id], references: [id], onUpdate: Restrict)
+  sales      sales      @relation(fields: [sale_id], references: [id], onDelete: Cascade)
 
   @@schema("public")
 }
 
 model sales {
-  id             BigInt         @id @default(autoincrement())
-  total_price    BigInt         @default(0)
-  total_quantity BigInt         @default(0)
-  pay_method     String?        @db.VarChar
+  id             Int            @id @default(autoincrement())
+  total_price    Int
+  total_quantity Int
+  pay_method     String?
   created_at     DateTime       @default(now()) @db.Timestamptz(6)
   user_id        String         @db.Uuid
+  company_id     Int?
   sale_product   sale_product[]
-  users          users          @relation(fields: [user_id], references: [id], onUpdate: Restrict)
+  companies      companies?     @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  profiles       profiles       @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "sales_user_id_fkey1")
 
   @@schema("public")
 }

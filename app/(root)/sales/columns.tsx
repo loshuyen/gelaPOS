@@ -72,7 +72,12 @@ export const columns: ColumnDef<Sale>[] = [
       const sale = row.original;
       return (
         <div className="flex align-center justify-around">
-          <Link href={`${routes.SALES}/${sale.id}`}>明細</Link>
+          <Link
+            href={`${routes.SALES}/${sale.id}`}
+            className="text-lg self-center"
+          >
+            明細
+          </Link>
           <DeleteBtn
             handleDelete={async () => {
               await deleteSaleById(sale.id);

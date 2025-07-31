@@ -177,3 +177,44 @@ export async function createFlavor(formData: FormData) {
 
   revalidatePath(routes.PRODUCTS);
 }
+
+export async function deleteFlavorById(id: number) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) {
+    throw new Error("未授權的使用者");
+  }
+
+  const companyId = userProfile.company_id;
+
+  const flavor = await prisma.flavors.findUnique({
+    where: {
+      id,
+      AND: { company_id: companyId },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!flavor) throw new Error("未授權的使用者");
+
+  await prisma.flavors.delete({
+    where: { id },
+  });
+
+  revalidatePath(routes.PRODUCTS);
+}

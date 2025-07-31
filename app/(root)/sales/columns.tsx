@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { routes } from "@/constants/routes";
 import Link from "next/link";
 import { deleteSaleById } from "@/actions/sales";
-import DeleteBtn from "./DeleteBtn";
+import DeleteBtn from "@/components/buttons/DeleteBtn";
 
 export type Sale = {
   id: number;

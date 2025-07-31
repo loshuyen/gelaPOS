@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { deleteSaleById } from "@/actions/sales";
 import type { SaleDetail } from "./columns";
-import DeleteBtn from "../DeleteBtn";
+import DeleteBtn from "@/components/buttons/DeleteBtn";
 
 interface SalesTableProps {
   columns: ColumnDef<SaleDetail>[];

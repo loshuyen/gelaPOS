@@ -1,10 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, CircleCheck, CircleX } from "lucide-react";
 import { Product } from "@/types/product";
 import Image from "next/image";
 import { EditProduct } from "./EditProduct";
+import DeleteBtn from "../buttons/DeleteBtn";
+import { deleteProductById } from "@/actions/products";
 
 function formatDate(date: Date): string {
   const yyyy = date.getFullYear();
@@ -65,7 +67,11 @@ export const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
       const is_active = row.getValue("is_active");
-      return is_active ? "YES" : "NO";
+      return is_active ? (
+        <CircleCheck className="text-green-500" />
+      ) : (
+        <CircleX className="text-gray-800" />
+      );
     },
   },
   {
@@ -81,8 +87,13 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original;
       return (
-        <div className="flex align-center justify-around">
+        <div className="flex align-center justify-around ml-4">
           <EditProduct product={product} />
+          <DeleteBtn
+            handleDelete={async () => {
+              await deleteProductById(product.id);
+            }}
+          />
         </div>
       );
     },

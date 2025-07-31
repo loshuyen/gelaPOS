@@ -1,9 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, CircleCheck, CircleX } from "lucide-react";
 import { Flavor } from "@/types/product";
 import { EditFlavor } from "./EditFlavor";
+import DeleteBtn from "../buttons/DeleteBtn";
+import { deleteFlavorById } from "@/actions/flavors";
 
 function formatDate(date: Date): string {
   const yyyy = date.getFullYear();
@@ -39,7 +41,11 @@ export const columns: ColumnDef<Flavor>[] = [
     },
     cell: ({ row }) => {
       const is_active = row.getValue("is_active");
-      return is_active ? "YES" : "NO";
+      return is_active ? (
+        <CircleCheck className="text-green-500" />
+      ) : (
+        <CircleX className="text-gray-800" />
+      );
     },
   },
   {
@@ -55,8 +61,13 @@ export const columns: ColumnDef<Flavor>[] = [
     cell: ({ row }) => {
       const flavor = row.original;
       return (
-        <div className="flex align-center justify-around">
+        <div className="flex align-center justify-center gap-4">
           <EditFlavor flavor={flavor} />
+          <DeleteBtn
+            handleDelete={async () => {
+              await deleteFlavorById(flavor.id);
+            }}
+          />
         </div>
       );
     },

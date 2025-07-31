@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { HtmlHTMLAttributes } from "react";
 import {
   AlertDialog,
@@ -14,15 +13,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { routes } from "@/constants/routes";
 
 interface DeleteBtnProps extends HtmlHTMLAttributes<HTMLButtonElement> {
   handleDelete: () => Promise<void>;
 }
 
 const DeleteBtn = ({ handleDelete }: DeleteBtnProps) => {
-  const router = useRouter();
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -30,9 +26,9 @@ const DeleteBtn = ({ handleDelete }: DeleteBtnProps) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>確定要刪除紀錄嗎？</AlertDialogTitle>
+          <AlertDialogTitle>確定要刪除嗎？</AlertDialogTitle>
           <AlertDialogDescription>
-            資料無法復原，確認後將永久刪除紀錄
+            資料無法復原，確認後將永久刪除
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -40,7 +36,6 @@ const DeleteBtn = ({ handleDelete }: DeleteBtnProps) => {
           <AlertDialogAction
             onClick={async () => {
               await handleDelete();
-              router.push(routes.SALES);
             }}
           >
             確認

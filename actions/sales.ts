@@ -3,6 +3,7 @@
 import { getCurrentUser } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import { CartItem } from "@/types/product";
+import { revalidatePath } from "next/cache";
 
 export const getAllSales = async () => {
   const user = await getCurrentUser();
@@ -175,4 +176,6 @@ export const deleteSaleById = async (saleId: number) => {
       id: sale.id,
     },
   });
+
+  revalidatePath("/sales");
 };

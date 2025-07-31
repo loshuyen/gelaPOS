@@ -179,3 +179,44 @@ export async function createProduct(formData: FormData) {
 
   revalidatePath(routes.PRODUCTS);
 }
+
+export async function deleteProductById(id: number) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    throw new Error("使用者未登入");
+  }
+
+  const userProfile = await prisma.profiles.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      company_id: true,
+    },
+  });
+
+  if (!userProfile?.company_id) {
+    throw new Error("未授權的使用者");
+  }
+
+  const companyId = userProfile.company_id;
+
+  const product = await prisma.products.findUnique({
+    where: {
+      id,
+      AND: { company_id: companyId },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!product) throw new Error("未授權的使用者");
+
+  await prisma.products.delete({
+    where: { id },
+  });
+
+  revalidatePath(routes.PRODUCTS);
+}

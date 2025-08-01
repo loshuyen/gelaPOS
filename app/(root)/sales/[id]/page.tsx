@@ -2,11 +2,11 @@ import { getSaleById } from "@/actions/sales";
 import { SaleTable } from "./SaleTable";
 import { columns } from "./columns";
 
-interface SaleDetailPageProps {
-  params: { id: number };
-}
-
-const SaleDetailPage = async ({ params }: SaleDetailPageProps) => {
+const SaleDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
 
   const sales = await getSaleById(Number(id));

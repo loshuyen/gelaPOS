@@ -6,6 +6,7 @@ import { Flavor } from "@/types/product";
 import { EditFlavor } from "./EditFlavor";
 import DeleteBtn from "../buttons/DeleteBtn";
 import { deleteFlavorById } from "@/actions/flavors";
+import { toast } from "sonner";
 
 function formatDate(date: Date): string {
   const yyyy = date.getFullYear();
@@ -65,7 +66,13 @@ export const columns: ColumnDef<Flavor>[] = [
           <EditFlavor flavor={flavor} />
           <DeleteBtn
             handleDelete={async () => {
-              await deleteFlavorById(flavor.id);
+              toast.promise(deleteFlavorById(flavor.id), {
+                loading: "刪除中...",
+                success: () => {
+                  return "刪除完成";
+                },
+                error: "刪除失敗",
+              });
             }}
           />
         </div>

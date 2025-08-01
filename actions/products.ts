@@ -1,6 +1,6 @@
 "use server";
 
-import { getCurrentUser } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import { routes } from "@/constants/routes";
 import { revalidatePath } from "next/cache";
@@ -209,11 +209,17 @@ export async function deleteProductById(id: number) {
     },
     select: {
       id: true,
+      imageSrc: true,
     },
   });
 
   if (!product) throw new Error("未授權的使用者");
 
+  const imagePath = product.imageSrc?.split("/").pop();
+  if (imagePath) {
+    const supabase = await createClient();
+    await supabase.storage.from("products").remove([imagePath]);
+  }
   await prisma.products.delete({
     where: { id },
   });

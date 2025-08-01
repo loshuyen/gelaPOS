@@ -4,9 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, CircleCheck, CircleX } from "lucide-react";
 import { Product } from "@/types/product";
 import Image from "next/image";
-import { EditProduct } from "./EditProduct";
 import DeleteBtn from "../buttons/DeleteBtn";
 import { deleteProductById } from "@/actions/products";
+import { toast } from "sonner";
+import EditProductForm from "./EditProductForm";
 
 function formatDate(date: Date): string {
   const yyyy = date.getFullYear();
@@ -88,10 +89,16 @@ export const columns: ColumnDef<Product>[] = [
       const product = row.original;
       return (
         <div className="flex align-center justify-around ml-4">
-          <EditProduct product={product} />
+          <EditProductForm product={product} />
           <DeleteBtn
             handleDelete={async () => {
-              await deleteProductById(product.id);
+              toast.promise(deleteProductById(product.id), {
+                loading: "刪除中...",
+                success: () => {
+                  return "刪除完成";
+                },
+                error: "刪除失敗",
+              });
             }}
           />
         </div>

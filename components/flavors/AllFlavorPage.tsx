@@ -25,7 +25,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CreateFlavor } from "./CreateFlavor";
+import CreateFlavorForm from "./CreateFlavorForm";
 
 interface SalesTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -70,7 +70,7 @@ export function AllFlavorPage<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <CreateFlavor />
+        <CreateFlavorForm />
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table className="table-fixed">

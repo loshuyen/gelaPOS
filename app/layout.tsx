@@ -21,7 +21,7 @@ const notoSansTC = Noto_Sans_TC({
 
 export const metadata: Metadata = {
   title: "GelaPOS",
-  description: "A point of sale system for gelato shops.",
+  description: "A point of sale (POS) system for gelato shops.",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansTC.variable}antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansTC.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
